@@ -4,10 +4,6 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    disk:
-      name: n8n-data
-      mountPath: /home/node/.n8n
-      sizeGB: 1
     envVars:
       - key: N8N_ENVIRONMENT
         value: "production"
@@ -18,6 +14,10 @@ services:
       - key: N8N_PROTOCOL
         value: "https"
       - key: WEBHOOK_TUNNEL_URL
+        value: "https://n8nselfhost-render.onrender.com"
+      - key: WEBHOOK_URL
+        value: "https://n8nselfhost-render.onrender.com"
+      - key: N8N_EDITOR_BASE_URL
         value: "https://n8nselfhost-render.onrender.com"
       - key: GENERIC_TIMEZONE
         value: "Asia/Bangkok"
