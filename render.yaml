@@ -4,6 +4,10 @@ services:
     env: docker
     plan: free
     autoDeploy: true
+    disk:
+      name: n8n-data
+      mountPath: /home/node/.n8n
+      sizeGB: 1
     envVars:
       - key: N8N_ENVIRONMENT
         value: "production"
