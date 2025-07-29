@@ -24,24 +24,30 @@ This project deploys n8n workflow automation tool on Render.com with Supabase Po
 2. Connect your GitHub account to Render
 3. Create a new Web Service
 4. Connect your forked repository
-5. Set the following environment variables in Render:
+5. **Set the following environment variables in Render Dashboard** (do NOT put sensitive data in code):
 
-### Required Environment Variables
+### Required Environment Variables (Set in Render Dashboard)
+
+Go to your Render service → Environment tab and add these variables:
 
 ```
-SUPABASE_DB_HOST=your-supabase-host
-SUPABASE_DB_NAME=postgres
-SUPABASE_DB_USER=postgres
-SUPABASE_DB_PASSWORD=your-supabase-password
+DB_POSTGRESDB_HOST=db.muaukcuuqquscvfnvhtz.supabase.co
+DB_POSTGRESDB_DATABASE=postgres
+DB_POSTGRESDB_USER=postgres
+DB_POSTGRESDB_PASSWORD=your-actual-supabase-password
 ```
+
+**🔒 Security Note**: Never commit passwords or sensitive credentials to your repository. Always use Render's Environment Variables feature.
 
 ### Example Values
 ```
-SUPABASE_DB_HOST=db.abcdefghijklmnop.supabase.co
-SUPABASE_DB_NAME=postgres
-SUPABASE_DB_USER=postgres
-SUPABASE_DB_PASSWORD=your-secure-password
+DB_POSTGRESDB_HOST=db.abcdefghijklmnop.supabase.co
+DB_POSTGRESDB_DATABASE=postgres
+DB_POSTGRESDB_USER=postgres
+DB_POSTGRESDB_PASSWORD=your-secure-password
 ```
+
+**⚠️ Important**: Set these in Render's Environment Variables, not in your code files!
 
 ## Configuration Details
 
@@ -119,23 +125,33 @@ N8N will automatically create the required database tables on first startup:
    - Go to your Supabase project dashboard
    - Navigate to Settings > Database
    - Copy the Host URL (looks like `db.xxxxxxxxx.supabase.co`)
+   - Copy your password
 
-2. **Update render.yaml**:
-   - Replace `db.xxxxxxxxx.supabase.co` with your actual host
-   - Replace `your-supabase-password` with your actual password
+2. **Set Environment Variables in Render**:
+   - Go to your Render service dashboard
+   - Click on "Environment" tab
+   - Add these variables:
+     ```
+     DB_POSTGRESDB_HOST=db.xxxxxxxxx.supabase.co
+     DB_POSTGRESDB_DATABASE=postgres
+     DB_POSTGRESDB_USER=postgres
+     DB_POSTGRESDB_PASSWORD=your-actual-password
+     ```
 
-3. **Redeploy**:
-   - Push changes to your repository
-   - Render will automatically redeploy
+3. **Deploy**:
+   - Render will automatically redeploy when you save environment variables
+   - No need to push code changes for environment variable updates
 
 ## Environment Variables Reference
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `SUPABASE_DB_HOST` | Supabase database host | `db.xxx.supabase.co` |
-| `SUPABASE_DB_NAME` | Database name | `postgres` |
-| `SUPABASE_DB_USER` | Database username | `postgres` |
-| `SUPABASE_DB_PASSWORD` | Database password | `your-password` |
+| Variable | Description | Where to Set | Example |
+|----------|-------------|--------------|---------|
+| `DB_POSTGRESDB_HOST` | Supabase database host | Render Environment | `db.xxx.supabase.co` |
+| `DB_POSTGRESDB_DATABASE` | Database name | Render Environment | `postgres` |
+| `DB_POSTGRESDB_USER` | Database username | Render Environment | `postgres` |
+| `DB_POSTGRESDB_PASSWORD` | Database password | Render Environment | `your-password` |
+
+**🔐 Security Best Practice**: All sensitive data should be set in Render's Environment Variables, never in your code repository.
 
 ## Support
 

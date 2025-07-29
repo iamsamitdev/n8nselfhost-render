@@ -24,15 +24,15 @@ services:
       - key: DB_TYPE
         value: "postgresdb"
       - key: DB_POSTGRESDB_HOST
-        value: "db.xxxxxxxxx.supabase.co"
+        sync: false
       - key: DB_POSTGRESDB_PORT
         value: "5432"
       - key: DB_POSTGRESDB_DATABASE
-        value: "postgres"
+        sync: false
       - key: DB_POSTGRESDB_USER
-        value: "postgres"
+        sync: false
       - key: DB_POSTGRESDB_PASSWORD
-        value: "your-supabase-password"
+        sync: false
       - key: DB_POSTGRESDB_SCHEMA
         value: "public"
       - key: DB_POSTGRESDB_SSL
