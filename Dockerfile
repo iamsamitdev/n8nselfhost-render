@@ -17,8 +17,14 @@ ENV DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=false
 # Disable file permissions check for Render
 ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
 
-# Render assigns PORT dynamically, n8n will use N8N_PORT
-ENV N8N_PORT=$PORT
+# Task runners enabled
+ENV N8N_RUNNERS_ENABLED=true
+
+# Bind to all interfaces and use Render's PORT
+ENV N8N_HOST=0.0.0.0
 
 # Use Render's PORT environment variable
 EXPOSE $PORT
+
+# Start command that binds to correct host and port
+CMD ["sh", "-c", "N8N_PORT=${PORT:-5678} N8N_HOST=0.0.0.0 n8n start"]
