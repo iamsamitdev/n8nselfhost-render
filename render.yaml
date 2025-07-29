@@ -10,7 +10,7 @@ services:
       - key: N8N_HOST
         value: "n8nselfhost-render.onrender.com"
       - key: N8N_PORT
-        value: "5678"
+        value: "$PORT"
       - key: N8N_PROTOCOL
         value: "https"
       - key: WEBHOOK_TUNNEL_URL
@@ -24,16 +24,18 @@ services:
       - key: DB_TYPE
         value: "postgresdb"
       - key: DB_POSTGRESDB_HOST
-        value: "${SUPABASE_DB_HOST}"
+        value: "db.xxxxxxxxx.supabase.co"
       - key: DB_POSTGRESDB_PORT
         value: "5432"
       - key: DB_POSTGRESDB_DATABASE
-        value: "${SUPABASE_DB_NAME}"
+        value: "postgres"
       - key: DB_POSTGRESDB_USER
-        value: "${SUPABASE_DB_USER}"
+        value: "postgres"
       - key: DB_POSTGRESDB_PASSWORD
-        value: "${SUPABASE_DB_PASSWORD}"
+        value: "your-supabase-password"
       - key: DB_POSTGRESDB_SCHEMA
         value: "public"
       - key: DB_POSTGRESDB_SSL
         value: "true"
+      - key: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
+        value: "false"

@@ -85,11 +85,48 @@ N8N will automatically create the required database tables on first startup:
 - Verify your Supabase connection details
 - Check that SSL is enabled
 - Ensure your Supabase project is active
+- **Important**: Replace placeholder values in `render.yaml` with your actual Supabase credentials:
+  ```yaml
+  - key: DB_POSTGRESDB_HOST
+    value: "db.xxxxxxxxx.supabase.co"  # Replace with your actual host
+  - key: DB_POSTGRESDB_PASSWORD
+    value: "your-supabase-password"     # Replace with your actual password
+  ```
 
 ### Deployment Issues
 - Check Render deployment logs
 - Verify all environment variables are set correctly
 - Make sure your Dockerfile builds successfully
+- **Port Issues**: Render automatically assigns a PORT - don't set it manually
+
+### Common Errors and Solutions
+
+#### Error: `connect ECONNREFUSED ::1:5432`
+**Cause**: N8N is trying to connect to localhost instead of Supabase
+**Solution**: Update the `DB_POSTGRESDB_HOST` in your `render.yaml` with your actual Supabase host
+
+#### Error: `No open ports detected`
+**Cause**: N8N is not binding to Render's assigned PORT
+**Solution**: This is fixed with our startup script that uses `$PORT` environment variable
+
+#### Error: `Permissions 0644 for n8n settings file`
+**Cause**: File permission warning on Render
+**Solution**: We've added `N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false` to suppress this
+
+### Quick Fix Steps for Database Connection
+
+1. **Get your Supabase credentials**:
+   - Go to your Supabase project dashboard
+   - Navigate to Settings > Database
+   - Copy the Host URL (looks like `db.xxxxxxxxx.supabase.co`)
+
+2. **Update render.yaml**:
+   - Replace `db.xxxxxxxxx.supabase.co` with your actual host
+   - Replace `your-supabase-password` with your actual password
+
+3. **Redeploy**:
+   - Push changes to your repository
+   - Render will automatically redeploy
 
 ## Environment Variables Reference
 
