@@ -21,3 +21,19 @@ services:
         value: "https://n8nselfhost-render.onrender.com"
       - key: GENERIC_TIMEZONE
         value: "Asia/Bangkok"
+      - key: DB_TYPE
+        value: "postgresdb"
+      - key: DB_POSTGRESDB_HOST
+        value: "${SUPABASE_DB_HOST}"
+      - key: DB_POSTGRESDB_PORT
+        value: "5432"
+      - key: DB_POSTGRESDB_DATABASE
+        value: "${SUPABASE_DB_NAME}"
+      - key: DB_POSTGRESDB_USER
+        value: "${SUPABASE_DB_USER}"
+      - key: DB_POSTGRESDB_PASSWORD
+        value: "${SUPABASE_DB_PASSWORD}"
+      - key: DB_POSTGRESDB_SCHEMA
+        value: "public"
+      - key: DB_POSTGRESDB_SSL
+        value: "true"

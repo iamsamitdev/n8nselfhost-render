@@ -5,5 +5,10 @@ ENV N8N_PROTOCOL=https
 ENV WEBHOOK_URL=https://n8nselfhost-render.onrender.com
 ENV N8N_EDITOR_BASE_URL=https://n8nselfhost-render.onrender.com
 
+# PostgreSQL Database Configuration
+ENV DB_TYPE=postgresdb
+ENV DB_POSTGRESDB_SSL=true
+ENV DB_POSTGRESDB_SCHEMA=public
+
 # ใช้พอร์ต 5678 สำหรับ Render
 EXPOSE 5678
