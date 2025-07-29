@@ -2,6 +2,36 @@
 
 This project deploys n8n workflow automation tool on Render.com with Supabase PostgreSQL as the database backend.
 
+## ✨ Key Features
+
+- 🚀 **One-click deployment** on Render.com
+- 🐘 **PostgreSQL support** with Supabase integration
+- 🔒 **Secure configuration** with environment variables
+- 🌐 **HTTPS enabled** with proper webhook support
+- 📊 **Task runners enabled** for better performance
+- 🔧 **IPv6 compatibility fixes** for stable connections
+- 🛡️ **Production-ready** with proper SSL configuration
+
+## 🔄 Recent Updates
+
+- ✅ Fixed IPv6 connection issues with Supabase
+- ✅ Simplified Dockerfile for better compatibility
+- ✅ Enabled task runners for improved performance
+- ✅ Added SSL rejection unauthorized fix
+- ✅ Configured dynamic port binding for Render
+- ✅ Removed health check path issues
+
+## 📁 Project Structure
+
+```
+n8nselfhost-render/
+├── Dockerfile              # Simplified N8N container configuration
+├── render.yaml             # Render.com deployment configuration
+├── README.md              # This documentation
+├── .env.example           # Environment variables template
+└── .gitignore            # Git ignore rules for security
+```
+
 ## Prerequisites
 
 1. **Render.com Account**: Sign up at [render.com](https://render.com)
@@ -69,17 +99,29 @@ DB_POSTGRESDB_PASSWORD=your-secure-password
 
 ## Configuration Details
 
+### Dockerfile Features
+- **Base Image**: n8nio/n8n:latest
+- **Protocol**: HTTPS with proper webhook URLs
+- **Database**: PostgreSQL with SSL support
+- **Security**: File permissions enforcement disabled for Render compatibility
+- **Task Runners**: Enabled by default
+- **IPv6 Issues**: Fixed with SSL rejection unauthorized disabled
+
 ### Database Configuration
 - **Type**: PostgreSQL
 - **SSL**: Enabled (required for Supabase)
+- **SSL Reject Unauthorized**: Disabled (for compatibility)
 - **Schema**: public
 - **Port**: 5432
 
 ### N8N Configuration
 - **Environment**: Production
+- **Host**: 0.0.0.0 (binds to all interfaces)
 - **Protocol**: HTTPS
-- **Port**: 5678
+- **Port**: Dynamic (assigned by Render via $PORT)
 - **Timezone**: Asia/Bangkok
+- **Task Runners**: Enabled
+- **SSL Reject Unauthorized**: Disabled (for Supabase compatibility)
 
 ## Deployment Steps
 
@@ -139,13 +181,20 @@ N8N will automatically create the required database tables on first startup:
 2. Try switching between Direct connection and Transaction pooler
 3. Check that your Supabase project is active and not paused
 
-#### Error: `chmod: /start.sh: Operation not permitted`
-**Cause**: Permission issues in Docker build process
-**Solution**: We've simplified the Dockerfile to use environment variables only (no custom scripts)
+#### Error: `Command "sh" not found`
+**Cause**: Trying to use shell commands not available in n8n image
+**Solution**: We've simplified the Dockerfile to use only environment variables, no custom commands
 
-#### Error: `No open ports detected`
-**Cause**: N8N is not binding to Render's assigned PORT
-**Solution**: We use `N8N_PORT=$PORT` environment variable which Render will substitute automatically
+#### Error: Deploy stuck "In Progress"
+**Cause**: Health check or port binding issues
+**Solution**: 
+1. Removed health check path from render.yaml
+2. Set N8N_HOST to 0.0.0.0 for proper binding
+3. Use dynamic PORT assignment from Render
+
+#### Error: `N8N_RUNNERS_ENABLED` deprecation warning
+**Cause**: N8N will require task runners in future versions
+**Solution**: We've enabled task runners by default with `N8N_RUNNERS_ENABLED=true`
 
 #### Error: `Permissions 0644 for n8n settings file`
 **Cause**: File permission warning on Render
@@ -182,14 +231,55 @@ N8N will automatically create the required database tables on first startup:
 
 ## Environment Variables Reference
 
+### Built-in Variables (Configured in render.yaml)
+| Variable | Value | Description |
+|----------|-------|-------------|
+| `N8N_ENVIRONMENT` | production | N8N environment mode |
+| `N8N_HOST` | 0.0.0.0 | Bind to all interfaces |
+| `N8N_PORT` | $PORT | Dynamic port from Render |
+| `N8N_PROTOCOL` | https | Protocol for webhooks |
+| `WEBHOOK_TUNNEL_URL` | https://n8nselfhost-render.onrender.com | Webhook base URL |
+| `WEBHOOK_URL` | https://n8nselfhost-render.onrender.com | Webhook URL |
+| `N8N_EDITOR_BASE_URL` | https://n8nselfhost-render.onrender.com | Editor access URL |
+| `GENERIC_TIMEZONE` | Asia/Bangkok | Timezone setting |
+| `DB_TYPE` | postgresdb | Database type |
+| `DB_POSTGRESDB_PORT` | 5432 | PostgreSQL port |
+| `DB_POSTGRESDB_SCHEMA` | public | Database schema |
+| `DB_POSTGRESDB_SSL` | true | SSL enabled |
+| `DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED` | false | SSL compatibility |
+| `N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS` | false | Disable file permission checks |
+| `N8N_RUNNERS_ENABLED` | true | Enable task runners |
+
+### Required Variables (Set in Render Dashboard)
 | Variable | Description | Where to Set | Example |
 |----------|-------------|--------------|---------|
 | `DB_POSTGRESDB_HOST` | Supabase database host | Render Environment | `db.xxx.supabase.co` |
 | `DB_POSTGRESDB_DATABASE` | Database name | Render Environment | `postgres` |
-| `DB_POSTGRESDB_USER` | Database username | Render Environment | `postgres` |
+| `DB_POSTGRESDB_USER` | Database username | Render Environment | `postgres.xxx` |
 | `DB_POSTGRESDB_PASSWORD` | Database password | Render Environment | `your-password` |
 
 **🔐 Security Best Practice**: All sensitive data should be set in Render's Environment Variables, never in your code repository.
+
+## 🔧 Technical Notes
+
+### Render.yaml Configuration
+- Uses `sync: false` for database credentials (set via Render Dashboard)
+- Dynamic port assignment with `$PORT` variable
+- No custom startup commands for better compatibility
+- Simplified configuration for stable deployments
+
+### Dockerfile Optimizations
+- Minimal changes to n8n base image
+- Environment variables only (no custom scripts)
+- IPv6 compatibility fixes
+- SSL configuration for Supabase
+- Task runners enabled for performance
+
+### Database Connection Strategy
+1. **Primary**: Direct connection to Supabase (recommended)
+2. **Fallback**: Transaction pooler if direct connection fails
+3. **SSL**: Enabled with unauthorized rejection disabled
+4. **Schema**: Uses public schema by default
 
 ## Support
 
