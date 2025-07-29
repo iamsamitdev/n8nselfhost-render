@@ -4,13 +4,11 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    healthCheckPath: /healthz
-    startCommand: "N8N_PORT=$PORT N8N_HOST=0.0.0.0 n8n start"
     envVars:
       - key: N8N_ENVIRONMENT
         value: "production"
       - key: N8N_HOST
-        value: "n8nselfhost-render.onrender.com"
+        value: "0.0.0.0"
       - key: N8N_PORT
         value: "$PORT"
       - key: N8N_PROTOCOL
