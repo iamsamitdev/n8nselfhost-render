@@ -111,9 +111,13 @@ N8N will automatically create the required database tables on first startup:
 **Cause**: N8N is trying to connect to localhost instead of Supabase
 **Solution**: Update the `DB_POSTGRESDB_HOST` in your `render.yaml` with your actual Supabase host
 
+#### Error: `chmod: /start.sh: Operation not permitted`
+**Cause**: Permission issues in Docker build process
+**Solution**: We've simplified the Dockerfile to use environment variables only (no custom scripts)
+
 #### Error: `No open ports detected`
 **Cause**: N8N is not binding to Render's assigned PORT
-**Solution**: This is fixed with our startup script that uses `$PORT` environment variable
+**Solution**: We use `N8N_PORT=$PORT` environment variable which Render will substitute automatically
 
 #### Error: `Permissions 0644 for n8n settings file`
 **Cause**: File permission warning on Render
