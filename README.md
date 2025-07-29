@@ -30,20 +30,38 @@ This project deploys n8n workflow automation tool on Render.com with Supabase Po
 
 Go to your Render service → Environment tab and add these variables:
 
+**Option 1: Direct Connection (แนะนำสำหรับ N8N)**
 ```
 DB_POSTGRESDB_HOST=db.muaukcuuqquscvfnvhtz.supabase.co
 DB_POSTGRESDB_DATABASE=postgres
-DB_POSTGRESDB_USER=postgres
+DB_POSTGRESDB_USER=postgres.muaukcuuqquscvfnvhtz
+DB_POSTGRESDB_PASSWORD=your-actual-supabase-password
+```
+
+**Option 2: Transaction Pooler (ถ้า Direct connection ไม่ทำงาน)**
+```
+DB_POSTGRESDB_HOST=aws-0-ap-southeast-1.pooler.supabase.com
+DB_POSTGRESDB_DATABASE=postgres
+DB_POSTGRESDB_USER=postgres.muaukcuuqquscvfnvhtz
 DB_POSTGRESDB_PASSWORD=your-actual-supabase-password
 ```
 
 **🔒 Security Note**: Never commit passwords or sensitive credentials to your repository. Always use Render's Environment Variables feature.
 
 ### Example Values
+**Direct Connection:**
 ```
 DB_POSTGRESDB_HOST=db.abcdefghijklmnop.supabase.co
 DB_POSTGRESDB_DATABASE=postgres
-DB_POSTGRESDB_USER=postgres
+DB_POSTGRESDB_USER=postgres.abcdefghijklmnop
+DB_POSTGRESDB_PASSWORD=your-secure-password
+```
+
+**Transaction Pooler:**
+```
+DB_POSTGRESDB_HOST=aws-0-ap-southeast-1.pooler.supabase.com
+DB_POSTGRESDB_DATABASE=postgres
+DB_POSTGRESDB_USER=postgres.abcdefghijklmnop
 DB_POSTGRESDB_PASSWORD=your-secure-password
 ```
 
@@ -107,9 +125,19 @@ N8N will automatically create the required database tables on first startup:
 
 ### Common Errors and Solutions
 
-#### Error: `connect ECONNREFUSED ::1:5432`
-**Cause**: N8N is trying to connect to localhost instead of Supabase
-**Solution**: Update the `DB_POSTGRESDB_HOST` in your `render.yaml` with your actual Supabase host
+#### Error: `connect ENETUNREACH` IPv6 Connection Issues
+**Cause**: N8N is trying to connect via IPv6 which may not be supported
+**Solution**: 
+1. Use Direct connection instead of Transaction pooler
+2. Make sure your username includes the project reference: `postgres.your-project-ref`
+3. We've added `DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=false` to handle SSL issues
+
+#### Error: `There was an error initializing DB`
+**Cause**: Database connection configuration is incorrect
+**Solution**: 
+1. Verify your Supabase credentials are correct
+2. Try switching between Direct connection and Transaction pooler
+3. Check that your Supabase project is active and not paused
 
 #### Error: `chmod: /start.sh: Operation not permitted`
 **Cause**: Permission issues in Docker build process
@@ -134,12 +162,18 @@ N8N will automatically create the required database tables on first startup:
 2. **Set Environment Variables in Render**:
    - Go to your Render service dashboard
    - Click on "Environment" tab
-   - Add these variables:
+   - Add these variables (แนะนำ Direct connection ก่อน):
      ```
-     DB_POSTGRESDB_HOST=db.xxxxxxxxx.supabase.co
+     DB_POSTGRESDB_HOST=db.muaukcuuqquscvfnvhtz.supabase.co
      DB_POSTGRESDB_DATABASE=postgres
-     DB_POSTGRESDB_USER=postgres
+     DB_POSTGRESDB_USER=postgres.muaukcuuqquscvfnvhtz
      DB_POSTGRESDB_PASSWORD=your-actual-password
+     ```
+
+3. **หากมีปัญหา IPv6 หรือ Connection timeout**:
+   - ลองเปลี่ยนเป็น Transaction pooler:
+     ```
+     DB_POSTGRESDB_HOST=aws-0-ap-southeast-1.pooler.supabase.com
      ```
 
 3. **Deploy**:

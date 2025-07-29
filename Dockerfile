@@ -11,6 +11,9 @@ ENV DB_TYPE=postgresdb
 ENV DB_POSTGRESDB_SSL=true
 ENV DB_POSTGRESDB_SCHEMA=public
 
+# Force IPv4 for PostgreSQL connections (fix IPv6 issues)
+ENV DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=false
+
 # Disable file permissions check for Render
 ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
 
