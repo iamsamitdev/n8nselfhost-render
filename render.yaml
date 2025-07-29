@@ -37,5 +37,7 @@ services:
         value: "public"
       - key: DB_POSTGRESDB_SSL
         value: "true"
+      - key: DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED
+        value: "false"
       - key: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
         value: "false"
